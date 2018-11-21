@@ -46,11 +46,11 @@ public class Rabin {
         fop.close();
     }
  
-    public static void compute(long a, long b)
-	    {
-                long res_x,res_y;
+    public static long[] compute(long a, long b)
+	    {               
 	        long x = 0, y = 1;
 	        long prevx = 1, prevy = 0, temp;
+                long res_x, res_y;
 	        while (b != 0)
 	        {
 	            long q = a / b;
@@ -69,16 +69,25 @@ public class Rabin {
 	        System.out.println("Roots  x : "+ prevx +" y :"+ prevy);
 	        res_x = prevx;
 	        res_y = prevy;
+                
+                long[] wynik = new long[2];
+                wynik[0] = res_x;
+                wynik[1] = res_y;
+                return wynik;
 }
     
 
 
     public static void main(String[] args) throws IOException {
-        int p = 7;
-        int q = 11;
+        int p = 31;
+        if(p%4!=3) System.err.println("p nie spelnia wymagan");
+        int q = 19;
+        if(q%4!=3) System.err.println("q nie spelnia wymagan");
         int klucz = generujKlucz(p, q);
         System.out.println("klucz " + klucz);
-        int M = 68;
+        long[] wynik = new long[2];
+        wynik=compute(p,q);
+        int M = 86;
         int c = (M*M)%klucz;
         
         System.out.println("c " + c);
@@ -87,32 +96,15 @@ public class Rabin {
 
         System.out.println(mp + " "+ mq);
         
-        int m1 = (int)(Math.pow(c,(p+1)/4)%p);
-        int m3 = (int)(Math.pow(c,(q+1)/4)%q);
-        int m2 = (int)(p - Math.pow(c,(p+1)/4)%p);
-        int m4 = (int)(q - Math.pow(c,(q+1)/4)%q);
-        
-        int a = (int)(q*(Math.pow(q, -1)%p));
-        int b = (int)(p*(Math.pow(p, -1)%q));
-        
-        System.out.println("a: " + a + " b:" + b);
-        
-        int M1 = (int)(a*m1+b*m3)%klucz;
-        int M2 = (int)(a*m1+b*m4)%klucz;
-        int M3 = (int)(a*m2+b*m3)%klucz;
-        int M4 = (int)(a*m2+b*m4)%klucz;
-        
-        int r = abs((int)((-3*p*mq)+(2*q*mp))%klucz);
+        int r = abs((int)((wynik[0]*p*mq)+(wynik[1]*q*mp))%klucz);
         int _r = abs((int)(klucz - r));
-        int s = abs((int)((-3*p*mq)-(2*q*mp))%klucz);
+        int s = abs((int)((5*p*mq)-(-6*q*mp))%klucz);
         int _s = abs((int)(klucz - s));     
-        
-        
+              
         System.out.println(r + " "+ _r + " " + s + " " + _s);
         
-       //System.out.println(m1 + " "+ m2 + " " + m3 + " " + m4);
-       //System.out.println(M1 + " "+ M2 + " " + M3 + " " + M4);
-        
+        //compute(p, q);
+        //System.out.println(res_x + res_y);
         
     }
     
